@@ -15,7 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
-		<start-class>java.com.winemarketv2.Winemarketv2Application</start-class>
+		<start-class>com.winemarketv2.Winemarketv2Application</start-class>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -116,7 +116,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>java.com.winemarketv2.Winemarketv2Application</mainClass>
+							<mainClass>com.winemarketv2.Winemarketv2Application</mainClass>
 						</manifest>
 					</archive>
 					<annotationProcessorPaths>
