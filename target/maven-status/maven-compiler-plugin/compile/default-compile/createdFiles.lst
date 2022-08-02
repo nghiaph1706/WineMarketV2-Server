@@ -1,7 +1,6 @@
 com/winemarketv2/Repository/ProductRepository.class
 com/winemarketv2/Repository/CategoryRepository.class
 com/winemarketv2/entity/Category.class
-com/winemarketv2/test/test.class
 com/winemarketv2/Repository/UserRepository.class
 com/winemarketv2/Repository/CartDetailsRepository.class
 com/winemarketv2/jwt/JwtTokenProvider.class
@@ -14,7 +13,6 @@ com/winemarketv2/jwt/JwtAuthenticationFilter.class
 com/winemarketv2/DTO/LoginRequest.class
 com/winemarketv2/entity/User.class
 com/winemarketv2/entity/Brand.class
-com/winemarketv2/config/CorsConfig$1.class
 com/winemarketv2/entity/Product.class
 com/winemarketv2/config/WebSecurityConfig.class
 com/winemarketv2/api/CartAPI.class
@@ -28,6 +26,4 @@ com/winemarketv2/DTO/UserCustom.class
 com/winemarketv2/Repository/CartRepository.class
 com/winemarketv2/api/CategoryAPI.class
 com/winemarketv2/Winemarketv2Application.class
-com/winemarketv2/DTO/UserDTO.class
-com/winemarketv2/config/CorsConfig.class
 com/winemarketv2/service/UploadService.class
