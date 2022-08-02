@@ -90,7 +90,6 @@
 					<archive>
 						<manifest>
 						  <addClasspath>true</addClasspath>
-						  <classpathPrefix>lib/</classpathPrefix>
 						  <mainClass>com.winermarketv2.Winemarketv2Application</mainClass>
 						</manifest>
 					  </archive>
