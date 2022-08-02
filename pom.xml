@@ -113,6 +113,11 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>java.com.winemarketv2.Winemarketv2Application</mainClass>
+						</manifest>
+					</archive>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
