@@ -88,7 +88,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>class name us.com.test.abc.MyMainClass</mainClass>
+						<mainClass>java.com.winemarketv2.Winemarketv2Application</mainClass>
                     </manifest>
                 </archive>
             </configuration>
