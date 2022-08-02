@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Winemarketv2Application<winemarketv2>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.winemarketv2.Winemarketv2Application",
+            "projectName": "winemarketv2",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
