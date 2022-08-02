@@ -1,6 +1,7 @@
 package com.winemarketv2.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.context.Context;
 
@@ -14,6 +15,7 @@ import com.winemarketv2.jwt.JwtTokenProvider;
 import com.winemarketv2.service.EmailService;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +60,7 @@ public class UserAPI {
     @Autowired 
     EmailService emailService;
 
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     
     @PostMapping(value="login")
     public Map<String,String> login(@RequestBody LoginRequest loginRequest) {
@@ -72,6 +75,7 @@ public class UserAPI {
         
         String jwt = tokenProvider.generateToken((UserCustom) authentication.getPrincipal());
         String userId = userRepository.findByUsername(loginRequest.getUsername()).getId();
+        boolean isAdmin = userRepository.findByUsername(loginRequest.getUsername()).isRole();
         Cart cart = cartRepository.findByUserIdAndStatusLike(userId, "None");
         if (cart == null) {
             cart = new Cart();
@@ -86,8 +90,25 @@ public class UserAPI {
         response.put("token", jwt);
         response.put("userId", userId);
         response.put("cartId", cartId);
+        response.put("isAdmin", String.valueOf(isAdmin));
         return response;
     }
+
+    @PostMapping(value = "/signup")
+    public HttpStatus signup(@Valid @RequestBody User user ){
+        User usern = new User();
+        usern.setUsername(user.getUsername());
+        usern.setPassword(bCryptPasswordEncoder.encode("123"));
+        usern.setEmail(user.getEmail());
+        usern.setImage(user.getImage());
+        usern.setRole(user.isRole());
+        try {
+            userRepository.save(usern);
+            return HttpStatus.OK;
+        } catch (Exception e) {
+            return HttpStatus.CONFLICT;
+        }
+    } 
 
     @PostMapping(value = "sendcode")
     public ResponseEntity<Object> sendCode(@Valid @RequestBody User user) throws UnsupportedEncodingException, MessagingException{
@@ -135,7 +156,7 @@ public class UserAPI {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<User>> getAllUser(){
         List<User> uList = userRepository.findAll();
         if (uList.isEmpty()) {
@@ -145,7 +166,7 @@ public class UserAPI {
     }
 
     @GetMapping(value = "{id}")
-    @PreAuthorize("isAuthenticated() and #username == authentication.principal.username")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> getUser(@PathVariable("id") String id){
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
@@ -155,10 +176,16 @@ public class UserAPI {
     }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public HttpStatus saveUser(@Valid @RequestBody User user ){
+        User usern = new User();
+        usern.setUsername(user.getUsername());
+        usern.setPassword(bCryptPasswordEncoder.encode("123"));
+        usern.setEmail(user.getEmail());
+        usern.setImage(user.getImage());
+        usern.setRole(user.isRole());
         try {
-            userRepository.save(user);
+            userRepository.save(usern);
             return HttpStatus.OK;
         } catch (Exception e) {
             return HttpStatus.CONFLICT;
@@ -166,13 +193,44 @@ public class UserAPI {
     } 
     
     @PutMapping
-    @PreAuthorize("(isAuthenticated() and #username == authentication.principal.username) or hasAuthority('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public HttpStatus updateUser(@Valid @RequestBody User user){
         User usern = userRepository.findById(user.getId()).orElse(null);
         if (usern == null) {
             return HttpStatus.NOT_FOUND;
         }
-        usern = new User(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getImage(), user.isRole());
+        userRepository.save(user);
+        return HttpStatus.OK;
+    }
+
+    @GetMapping(value = "filter")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<User>> filterUser(
+        @RequestParam("_username") String username,
+        @RequestParam("_email") String email,
+        @RequestParam("_role") String role
+    ){  
+        List<User> uList = new ArrayList<>();
+        if (role.equals("true")) {
+            uList = userRepository.findByUsernameLikeAndEmailLikeAndRoleTrue(username, email);
+        } else {
+            uList = userRepository.findByUsernameLikeAndEmailLikeAndRoleFalse(username, email);
+        }
+        if (uList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<List<User>>(uList, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public HttpStatus deleteUser(@PathVariable("id") String id){
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return HttpStatus.NOT_FOUND;
+        }
+        cartRepository.deleteAllByUserId(user.getId());
+        userRepository.delete(user);
         return HttpStatus.OK;
     }
 

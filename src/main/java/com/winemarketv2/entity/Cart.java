@@ -1,6 +1,6 @@
 package com.winemarketv2.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,7 +22,7 @@ public class Cart {
     private String userId;
 
     @Field(value = "DataOrder")
-    private Date dateOrder = new Date();
+    private LocalDate dateOrder = LocalDate.now();
 
     @Field(value = "Total")
     private double total;
