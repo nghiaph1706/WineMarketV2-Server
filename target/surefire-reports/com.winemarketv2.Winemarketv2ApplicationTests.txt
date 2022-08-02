@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.winemarketv2.Winemarketv2ApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.975 s - in com.winemarketv2.Winemarketv2ApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.305 s - in com.winemarketv2.Winemarketv2ApplicationTests
