@@ -83,6 +83,16 @@
 
 	<build>
 		<plugins>
+        <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>class name us.com.test.abc.MyMainClass</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -126,7 +136,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.winemarketv2.Winemarketv2Application</mainClass>
+							<mainClass>java.com.winemarketv2.Winemarketv2Application</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
