@@ -94,20 +94,34 @@ public class UserAPI {
         return response;
     }
 
-    @PostMapping(value = "/signup")
+    @PostMapping(value = "signup")
     public HttpStatus signup(@Valid @RequestBody User user ){
-        User usern = new User();
-        usern.setUsername(user.getUsername());
-        usern.setPassword(bCryptPasswordEncoder.encode("123"));
-        usern.setEmail(user.getEmail());
-        usern.setImage(user.getImage());
-        usern.setRole(user.isRole());
-        try {
-            userRepository.save(usern);
-            return HttpStatus.OK;
-        } catch (Exception e) {
-            return HttpStatus.CONFLICT;
+        boolean check = true;
+
+		List<User> users = userRepository.findAll();
+		for (User u : users) {
+			if (user.getUsername().equals(u.getUsername())) {
+				if (user.getEmail().equals(u.getEmail())) {
+					check = false;
+					break;
+				}
+			}
+		}
+        if(check){
+            User usern = new User();
+            usern.setUsername(user.getUsername());
+            usern.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            usern.setEmail(user.getEmail());
+            usern.setImage(user.getImage());
+            usern.setRole(user.isRole());
+            try {
+                userRepository.save(usern);
+                return HttpStatus.OK;
+            } catch (Exception e) {
+                return HttpStatus.CONFLICT;
+            }
         }
+        return HttpStatus.CONFLICT;
     } 
 
     @PostMapping(value = "sendcode")
@@ -178,18 +192,32 @@ public class UserAPI {
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public HttpStatus saveUser(@Valid @RequestBody User user ){
-        User usern = new User();
-        usern.setUsername(user.getUsername());
-        usern.setPassword(bCryptPasswordEncoder.encode("123"));
-        usern.setEmail(user.getEmail());
-        usern.setImage(user.getImage());
-        usern.setRole(user.isRole());
-        try {
-            userRepository.save(usern);
-            return HttpStatus.OK;
-        } catch (Exception e) {
-            return HttpStatus.CONFLICT;
+        boolean check = true;
+
+		List<User> users = userRepository.findAll();
+		for (User u : users) {
+			if (user.getUsername().equals(u.getUsername())) {
+				if (user.getEmail().equals(u.getEmail())) {
+					check = false;
+					break;
+				}
+			}
+		}
+        if(check){
+            User usern = new User();
+            usern.setUsername(user.getUsername());
+            usern.setPassword(bCryptPasswordEncoder.encode(bCryptPasswordEncoder.encode("123")));
+            usern.setEmail(user.getEmail());
+            usern.setImage(user.getImage());
+            usern.setRole(user.isRole());
+            try {
+                userRepository.save(usern);
+                return HttpStatus.OK;
+            } catch (Exception e) {
+                return HttpStatus.CONFLICT;
+            }
         }
+        return HttpStatus.CONFLICT;
     } 
     
     @PutMapping
