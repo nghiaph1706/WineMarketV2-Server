@@ -154,7 +154,7 @@ public class UserAPI {
 		}
     }
 
-    @PostMapping(value = "forgot")
+    @PutMapping(value = "forgot")
     public HttpStatus forgot(@Valid @RequestBody User user){
         User usern = userRepository.findByUsername(user.getUsername());
         if (usern == null) {
